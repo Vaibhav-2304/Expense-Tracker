@@ -1,14 +1,10 @@
-import LoginPage from "./pages/login/LoginPage"
-import RegisterPage from "./pages/register/RegisterPage"
-function App() {
+import { RouterProvider } from "react-router-dom";
+import router from "./routes";
 
+function App() {
   return (
     <>
-     <div className="App">
-     <RegisterPage />
-
-      <LoginPage />
-    </div>
+    <RouterProvider router={router} />
     </>
   )
 }
