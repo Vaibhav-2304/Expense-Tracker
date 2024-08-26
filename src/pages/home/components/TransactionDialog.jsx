@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+
+var categoryOptions = [
+  "food",
+  "transport",
+  "entertainment",
+  "health",
+  "groceries",
+  "bills",
+];
 
 const TransactionDialog = ({ isOpen, onClose, onAdd }) => {
-  const [date, setDate] = useState('');
-  const [category, setCategory] = useState('');
-  const [title, setTitle] = useState('');
-  const [amount, setAmount] = useState('');
+  const [date, setDate] = useState("");
+  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
 
   const handleAdd = () => {
     const newTransaction = {
@@ -39,14 +48,21 @@ const TransactionDialog = ({ isOpen, onClose, onAdd }) => {
           <label className="block text-gray-700 mb-2" htmlFor="category">
             Category
           </label>
-          <input
-            type="text"
+          <select
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
-            placeholder="e.g., Food, Entertainment"
-          />
+          >
+            <option value="" disabled>
+              Select a category
+            </option>
+            {categoryOptions.map((option) => (
+              <option key={option} value={option}>
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="title">
