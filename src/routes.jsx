@@ -5,7 +5,7 @@ import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/register/RegisterPage';
 import LoginPage from './pages/login/LoginPage';
 
-var isLoggedIn = true;
+var isLoggedIn = false;
 
 const router = createBrowserRouter([
     {
