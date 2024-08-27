@@ -4,6 +4,7 @@ import { Bar } from "react-chartjs-2";
 import TransactionDialog from "./components/TransactionDialog";
 import Tile from "./components/ExpenseList";
 import "./style.css";
+import HamburgerMenu from "./components/Hamburger";
 
 import billImage from "./../../assets/bill.png";
 import entertainmentImage from "./../../assets/entertainment.png";
@@ -11,6 +12,10 @@ import foodImage from "./../../assets/food.png";
 import grocriesImage from "./../../assets/grocries.png";
 import healthImage from "./../../assets/health.png";
 import transportImage from "./../../assets/transport.png";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faPhone } from "@fortawesome/free-solid-svg-icons";
 
 import {
   Chart as ChartJS,
@@ -116,18 +121,14 @@ function HomePage() {
         <div className="w-3/4 h-[80%] bg-gradient-to-r from-green-200 to-blue-300 equilateral-triangle self-end"></div>
       </div>
 
-      <div class="flex items-center justify-center">
-        <div class="mr-8">
-          <div class="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-full cursor-pointer">
-            <div class="w-6 h-4 flex flex-col justify-between">
-              <span class="block w-full h-1 bg-black rounded-sm"></span>
-              <span class="block w-full h-1 bg-black rounded-sm"></span>
-              <span class="block w-full h-1 bg-black rounded-sm"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-3xl font-semibold text-slate-600">Expense Tracker</div>
+      <div>
+        <header className="p-4 bg-gradient-to-r from-green-200 to-blue-300  text-slate-800 flex items-center justify-between">
+          <HamburgerMenu />
+          <h1 className="text-2xl font-bold absolute left-1/2 transform -translate-x-1/2">
+            Expense Tracker
+          </h1>
+          <div className="w-12 h-12"></div>
+        </header>
       </div>
 
       <div className="flex justify-center items-center p-4">
@@ -163,7 +164,42 @@ function HomePage() {
           ))}
         </div>
       </div>
-
+      <div>
+        <footer className="bg-gradient-to-r from-green-200 to-blue-300 text-black py-6">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="mb-4 md:mb-0">
+                <h2 className="text-lg font-semibold">Expense Tracker</h2>
+                <p className="text-sm">© 2024 All rights reserved.</p>
+              </div>
+              <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                <a
+                  href="https://www.linkedin.com/in//kumar-vaibhav-2257111aa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gray-400 flex items-center space-x-2"
+                >
+                  <FontAwesomeIcon icon={faLinkedin} />
+                  <span>LinkedIn</span>
+                </a>
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faPhone} />
+                  <span>6204876xxx</span>
+                </div>
+                <a href="#" className="hover:text-gray-400">
+                  Privacy Policy
+                </a>
+                <a href="#" className="hover:text-gray-400">
+                  Terms of Service
+                </a>
+                <a href="#" className="hover:text-gray-400">
+                  Contact Us
+                </a>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
       <TransactionDialog
         isOpen={isAddExpenseOpen}
         onClose={closeDialog}
