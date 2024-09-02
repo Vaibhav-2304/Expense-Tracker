@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import expenseData from "./components/data.json";
 import { Bar } from "react-chartjs-2";
 import TransactionDialog from "./components/TransactionDialog";
 import Tile from "./components/ExpenseList";
-import "./style.css";
 import HamburgerMenu from "./components/Hamburger";
+import DropDownButton from "./components/DropDownButton";
+import Footer from "../Footer/Footer";
 
 import billImage from "./../../assets/bill.png";
 import entertainmentImage from "./../../assets/entertainment.png";
@@ -12,10 +13,6 @@ import foodImage from "./../../assets/food.png";
 import grocriesImage from "./../../assets/grocries.png";
 import healthImage from "./../../assets/health.png";
 import transportImage from "./../../assets/transport.png";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
-import { faPhone } from "@fortawesome/free-solid-svg-icons";
 
 import {
   Chart as ChartJS,
@@ -81,7 +78,7 @@ function HomePage() {
     labels: getPastWeekDays(),
     datasets: [
       {
-        label: "Amount Spent ($)",
+        label: "Amount($)",
         data: [10, 2.5, 12, 15, 60, 25, 20],
         backgroundColor: "rgba(2, 6, 23, 0.8)",
         borderColor: "rgba(0, 0, 0, 1)",
@@ -98,7 +95,7 @@ function HomePage() {
       },
       title: {
         display: true,
-        text: "Amount Spent on Various Items",
+        text: "Amount Spent in last 7 Days",
       },
     },
   };
@@ -115,14 +112,10 @@ function HomePage() {
   //-------------------------------------------------------------------------------------------------
 
   return (
-    <div className="relative min-h-screen">
-      <div className="absolute inset-0 -z-50 flex flex-col">
-        <div className="w-11/12 h-[50%] bg-gradient-to-r from-green-200 to-blue-300 triangle"></div>
-        <div className="w-3/4 h-[80%] bg-gradient-to-r from-green-200 to-blue-300 equilateral-triangle self-end"></div>
-      </div>
+    <div className="relative min-h-screen bg-gradient-to-r from-green-200 to-blue-300">
 
       <div>
-        <header className="p-4 bg-gradient-to-r from-green-200 to-blue-300  text-slate-800 flex items-center justify-between">
+        <header className="p-4 text-slate-800 flex items-center justify-between">
           <HamburgerMenu />
           <h1 className="text-2xl font-bold absolute left-1/2 transform -translate-x-1/2">
             Expense Tracker
@@ -139,7 +132,7 @@ function HomePage() {
 
       <div className="flex align-middle items-center justify-center">
         <button
-          className="bg-slate-800 hover:bg-slate-950 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-slate-800 hover:bg-slate-950 text-white font-bold py-2 px-4 mb-4 rounded focus:outline-none focus:shadow-outline"
           onClick={openDialog}
         >
           Add Expense
@@ -148,6 +141,14 @@ function HomePage() {
 
       <div className="flex justify-center items-center">
         <div className="w-full md:w-3/4 lg:w-3/5 bg-white rounded-lg shadow-lg">
+
+      <div className="flex justify-between m-3">
+        <DropDownButton options={["All", "food", "transport", "entertainment", "health", "groceries", "bills"]} onChange={()=>{}} label={"Filter Category : "}/>
+        <DropDownButton options={["Date", "Amount"]} onChange={()=>{}} label={"Sort By : "}/>
+      </div>
+
+      <span className="flex items-center align-middle justify-center mr-2 text-l text-gray-700 font-semibold">Current Month Expense</span>
+
           {expenseData.map((expense) => (
             <Tile
               key={expense.id} // Assuming each expense has a unique `id`
@@ -164,47 +165,12 @@ function HomePage() {
           ))}
         </div>
       </div>
-      <div>
-        <footer className="bg-gradient-to-r from-green-200 to-blue-300 text-black py-6">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="mb-4 md:mb-0">
-                <h2 className="text-lg font-semibold">Expense Tracker</h2>
-                <p className="text-sm">© 2024 All rights reserved.</p>
-              </div>
-              <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-                <a
-                  href="https://www.linkedin.com/in//kumar-vaibhav-2257111aa"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-gray-400 flex items-center space-x-2"
-                >
-                  <FontAwesomeIcon icon={faLinkedin} />
-                  <span>LinkedIn</span>
-                </a>
-                <div className="flex items-center space-x-2">
-                  <FontAwesomeIcon icon={faPhone} />
-                  <span>6204876xxx</span>
-                </div>
-                <a href="#" className="hover:text-gray-400">
-                  Privacy Policy
-                </a>
-                <a href="#" className="hover:text-gray-400">
-                  Terms of Service
-                </a>
-                <a href="#" className="hover:text-gray-400">
-                  Contact Us
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
       <TransactionDialog
         isOpen={isAddExpenseOpen}
         onClose={closeDialog}
         onAdd={() => {}}
       />
+      <Footer/>
     </div>
   );
 }

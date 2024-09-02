@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import DropDownButton from "./DropDownButton";
 
 var categoryOptions = [
   "food",
@@ -33,38 +34,6 @@ const TransactionDialog = ({ isOpen, onClose, onAdd }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-2xl font-bold mb-4">Add Transaction</h2>
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="date">
-            Date of Transaction
-          </label>
-          <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="category">
-            Category
-          </label>
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded"
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categoryOptions.map((option) => (
-              <option key={option} value={option}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="title">
             Title
           </label>
@@ -75,6 +44,18 @@ const TransactionDialog = ({ isOpen, onClose, onAdd }) => {
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
             placeholder="e.g., Grocery Shopping"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="date">
+            Date of Transaction
+          </label>
+          <input
+            type="date"
+            id="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
           />
         </div>
         <div className="mb-4">
@@ -89,6 +70,9 @@ const TransactionDialog = ({ isOpen, onClose, onAdd }) => {
             className="w-full p-2 border border-gray-300 rounded"
             placeholder="e.g., 50.00"
           />
+        </div>
+        <div className="mb-4">
+          <DropDownButton options={categoryOptions} onChange={()=>{}} label={"Select Category : "}/>
         </div>
         <div className="flex justify-end">
           <button

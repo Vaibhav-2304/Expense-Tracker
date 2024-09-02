@@ -1,11 +1,10 @@
-import React from 'react';
 import { createBrowserRouter, Outlet, Navigate } from 'react-router-dom';
 
 import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/register/RegisterPage';
 import LoginPage from './pages/login/LoginPage';
 
-var isLoggedIn = false;
+var isLoggedIn = true;
 
 const router = createBrowserRouter([
     {
