@@ -4,7 +4,17 @@ import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/register/RegisterPage';
 import LoginPage from './pages/login/LoginPage';
 
-var isLoggedIn = true;
+
+const chekLogin = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+      return false;
+  }
+  return true;
+};
+
+// Set isLoggedIn based on token validity
+const isLoggedIn = chekLogin();
 
 const router = createBrowserRouter([
     {

@@ -1,9 +1,11 @@
-import React from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa'; // Import icons from react-icons
 
-const Tile = ({ imageSrc, title, amount, onEdit, onDelete }) => {
+const Tile = ({index, imageSrc, title, amount, onEdit, onDelete }) => {
   return (
     <div className="flex items-center p-4 m-4 border border-gray-300 rounded-lg shadow-sm bg-white">
+    {/* Index */}
+    <p className="text-gray-800 text-xl mr-4">{index+"."}</p>
+
       {/* Circular Image */}
       <div className="flex-shrink-0">
         <img

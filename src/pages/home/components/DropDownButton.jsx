@@ -14,7 +14,7 @@ const DropDownButton = ({ options, onChange, label }) => {
 
   return (
 
-    <div className="flex items-center">
+    <div className="flex items-center align-middle justify-center mb-2">
       <span className="mr-2 text-xl text-gray-700 font-semibold">{label}</span>
     <div className="relative inline-block text-left">
       <button

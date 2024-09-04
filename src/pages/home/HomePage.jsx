@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import expenseData from "./components/data.json";
 import { Bar } from "react-chartjs-2";
 import TransactionDialog from "./components/TransactionDialog";
@@ -6,6 +6,8 @@ import Tile from "./components/ExpenseList";
 import HamburgerMenu from "./components/Hamburger";
 import DropDownButton from "./components/DropDownButton";
 import Footer from "../Footer/Footer";
+import Pagination from "rc-pagination";
+import "rc-pagination/assets/index.css";
 
 import billImage from "./../../assets/bill.png";
 import entertainmentImage from "./../../assets/entertainment.png";
@@ -100,6 +102,7 @@ function HomePage() {
     },
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
   const [isAddExpenseOpen, setisAddExpenseOpen] = useState(false);
 
   const openDialog = () => setisAddExpenseOpen(true);
@@ -113,7 +116,6 @@ function HomePage() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-r from-green-200 to-blue-300">
-
       <div>
         <header className="p-4 text-slate-800 flex items-center justify-between">
           <HamburgerMenu />
@@ -125,7 +127,7 @@ function HomePage() {
       </div>
 
       <div className="flex justify-center items-center p-4">
-        <div className="w-full md:w-3/4 lg:w-1/2 lg:h-[50vh] bg-white rounded-lg shadow-lg p-4">
+        <div className="w-full md:w-3/4 lg:w-1/2 lg:h-[50vh] bg-white rounded-lg shadow-lg p-4 ">
           <Bar data={data} options={options} />
         </div>
       </div>
@@ -140,18 +142,36 @@ function HomePage() {
       </div>
 
       <div className="flex justify-center items-center">
-        <div className="w-full md:w-3/4 lg:w-3/5 bg-white rounded-lg shadow-lg">
+        <div className="w-full md:w-3/4 lg:w-3/5 bg-white rounded-lg shadow-lg mx-2">
+          <div className="flex flex-col sm:flex-row sm:justify-between m-2">
+            <DropDownButton
+              options={[
+                "All",
+                "food",
+                "transport",
+                "entertainment",
+                "health",
+                "groceries",
+                "bills",
+              ]}
+              onChange={() => {}}
+              label={"Filter Category : "}
+            />
+            <DropDownButton
+              options={["Date", "Amount"]}
+              onChange={() => {}}
+              label={"Sort By : "}
+            />
+          </div>
 
-      <div className="flex justify-between m-3">
-        <DropDownButton options={["All", "food", "transport", "entertainment", "health", "groceries", "bills"]} onChange={()=>{}} label={"Filter Category : "}/>
-        <DropDownButton options={["Date", "Amount"]} onChange={()=>{}} label={"Sort By : "}/>
-      </div>
+          <span className="flex items-center align-middle justify-center mr-2 text-l text-gray-700 font-semibold">
+            Current Month Expense
+          </span>
 
-      <span className="flex items-center align-middle justify-center mr-2 text-l text-gray-700 font-semibold">Current Month Expense</span>
-
-          {expenseData.map((expense) => (
+          {expenseData.map((expense, idx) => (
             <Tile
               key={expense.id} // Assuming each expense has a unique `id`
+              index={idx+1}
               imageSrc={getImage(expense.category)} // Replace with a valid image source
               title={expense.title}
               amount={expense.amount}
@@ -163,14 +183,28 @@ function HomePage() {
               }}
             />
           ))}
+
+          <div className="flex items-center align-middle justify-center mb-4">
+            <Pagination
+              pageSize={5}
+              onChange={() => {}}
+              current={currentPage}
+              total={10}
+              prevIcon={<span className="text-gray-700">{"<"}</span>}
+              nextIcon={<span className="text-gray-700">{">"}</span>}
+          
+            />
+          </div>
+         
         </div>
       </div>
+
       <TransactionDialog
         isOpen={isAddExpenseOpen}
         onClose={closeDialog}
         onAdd={() => {}}
       />
-      <Footer/>
+      <Footer />
     </div>
   );
 }
