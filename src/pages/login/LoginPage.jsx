@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Auth from "../../services/auth_api";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Lottie from 'react-lottie-player'
 import walletAnimation from "../../assets/wallet.json";
@@ -8,10 +9,12 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+    const success = await new Auth().login(email, password);
+    if (success) {
+      window.location.href = "/";
+    }
   };
 
   return (

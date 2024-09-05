@@ -3,7 +3,7 @@ import { showErrorToast, showToast } from "../components/toast";
 
 class Api {
     Api;
-    baseURL = "http://localhost:5000";
+    baseURL = "http://localhost:3000";
 
     constructor() {
         this.Api = axios.create({

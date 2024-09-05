@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Lottie from 'react-lottie-player'
 import walletAnimation from "../../assets/wallet.json";
+import Auth from "../../services/auth_api";
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -9,12 +10,12 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle the registration logic here
-    console.log('Username:', username);
-    console.log('Email:', email);
-    console.log('Password:', password);
+    const success = await new Auth().register(username, email, password);
+    if (success) {
+      window.location.href = "/";
+    }
   };
 
   return (

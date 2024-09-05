@@ -16,11 +16,13 @@ class Expense extends Api{
     }
   }
 
-  async addNote(title, content) {
+  async addExpense(title, date, amount, category) {
     try {
       const response = await this.Api.post("/api/expense",{
         title: title,
-        content: content,
+        date: date,
+        amount : amount,
+        category: category
       });
 
       if (response.status == 200) {

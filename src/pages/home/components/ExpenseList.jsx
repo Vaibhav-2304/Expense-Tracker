@@ -1,10 +1,12 @@
-import { FaEdit, FaTrash } from 'react-icons/fa'; // Import icons from react-icons
+import PropTypes from "prop-types";
+import { FaEdit, FaTrash } from "react-icons/fa"; // Import icons from react-icons
 
-const Tile = ({index, imageSrc, title, amount, onEdit, onDelete }) => {
+
+const Tile = ({ index, imageSrc, title, amount, date, onEdit, onDelete }) => {
   return (
     <div className="flex items-center p-4 m-4 border border-gray-300 rounded-lg shadow-sm bg-white">
-    {/* Index */}
-    <p className="text-gray-800 text-xl mr-4">{index+"."}</p>
+      {/* Index */}
+      <p className="text-gray-800 text-xl mr-4">{index + "."}</p>
 
       {/* Circular Image */}
       <div className="flex-shrink-0">
@@ -17,8 +19,12 @@ const Tile = ({index, imageSrc, title, amount, onEdit, onDelete }) => {
 
       {/* Content */}
       <div className="ml-4 flex-grow">
-        <h3 className="text-xl font-bold">{title}</h3>
-        <p className="text-gray-600 text-lg font-semibold">{amount}</p>
+        <div className="flex justify-start">
+          <h3 className="text-xl font-bold">{title} : </h3>
+          <div className="w-4"></div>
+          <p className="text-gray-600 text-lg font-semibold">₹{amount}</p>
+        </div>
+        <p className="text-gray-600 text-lg font-semibold mt-2">{date}</p>
       </div>
 
       {/* Action Icons */}
@@ -40,6 +46,16 @@ const Tile = ({index, imageSrc, title, amount, onEdit, onDelete }) => {
       </div>
     </div>
   );
+};
+
+Tile.propTypes = {
+  index: PropTypes.number.isRequired,
+  imageSrc: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  amount: PropTypes.number.isRequired,
+  date: PropTypes.string.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default Tile;

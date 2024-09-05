@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 import DropDownButton from "./DropDownButton";
+import Expense from "../../../services/expense_api";
 
 var categoryOptions = [
   "food",
@@ -10,21 +12,24 @@ var categoryOptions = [
   "bills",
 ];
 
-const TransactionDialog = ({ isOpen, onClose, onAdd }) => {
-  const [date, setDate] = useState("");
-  const [category, setCategory] = useState("");
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState("");
+function formatDateToDDMMYYYY(dateString) {
+  const [year, month, day] = dateString.split("-");
+  return `${day}-${month}-${year}`;
+}
 
-  const handleAdd = () => {
-    const newTransaction = {
-      date,
-      category,
-      title,
-      amount: parseFloat(amount),
-    };
-    onAdd(newTransaction);
-    onClose(); // Close the dialog after adding
+
+const TransactionDialog = ({ isOpen, onClose, setHardRefresh}) => {
+  const [date, setDate] = useState("");
+  const [category, setCategory] = useState("food");
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState();
+
+  const handleAdd = async () => {
+    let newDate = formatDateToDDMMYYYY(date)
+    await new Expense().addExpense(title, newDate, amount, category).then(() => {
+      setHardRefresh((prev) => !prev); // Refresh the data
+      onClose(); // Close the dialog after adding
+    });
   };
 
   if (!isOpen) return null; // If the dialog is not open, don't render it
@@ -72,7 +77,7 @@ const TransactionDialog = ({ isOpen, onClose, onAdd }) => {
           />
         </div>
         <div className="mb-4">
-          <DropDownButton options={categoryOptions} onChange={()=>{}} label={"Select Category : "}/>
+          <DropDownButton options={categoryOptions} onChange={setCategory} label={"Select Category : "}/>
         </div>
         <div className="flex justify-end">
           <button
@@ -91,6 +96,12 @@ const TransactionDialog = ({ isOpen, onClose, onAdd }) => {
       </div>
     </div>
   );
+};
+
+TransactionDialog.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  setHardRefresh: PropTypes.func.isRequired,
 };
 
 export default TransactionDialog;

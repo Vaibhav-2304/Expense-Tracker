@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
-import expenseData from "./components/data.json";
 import { Bar } from "react-chartjs-2";
-import TransactionDialog from "./components/TransactionDialog";
-import Tile from "./components/ExpenseList";
-import HamburgerMenu from "./components/Hamburger";
-import DropDownButton from "./components/DropDownButton";
-import Footer from "../Footer/Footer";
+import TransactionDialog from "./components/TransactionDialog.jsx";
+import Tile from "./components/ExpenseList.jsx";
+import HamburgerMenu from "./components/Hamburger.jsx";
+import DropDownButton from "./components/DropDownButton.jsx";
+import Footer from "../Footer/Footer.jsx";
 import Pagination from "rc-pagination";
 import "rc-pagination/assets/index.css";
+import Expense from "../../services/expense_api.js";
 
-import billImage from "./../../assets/bill.png";
-import entertainmentImage from "./../../assets/entertainment.png";
-import foodImage from "./../../assets/food.png";
-import grocriesImage from "./../../assets/grocries.png";
-import healthImage from "./../../assets/health.png";
-import transportImage from "./../../assets/transport.png";
+import { getImage, getPastWeekDays, options, filterData, sortData, getPast7DaysSpending } from "./components/helper";
+import Lottie from "react-lottie-player";
+import walletAnimation from "../../assets/wallet.json";
 
 import {
   Chart as ChartJS,
@@ -35,53 +32,16 @@ ChartJS.register(
   Legend
 );
 
-function getImage(category) {
-  if (category == "bill") {
-    return billImage;
-  }
-  if (category == "entertainment") {
-    return entertainmentImage;
-  }
-  if (category == "food") {
-    return foodImage;
-  }
-  if (category == "grocries") {
-    return grocriesImage;
-  }
-  if (category == "health") {
-    return healthImage;
-  }
-  if (category == "transport") {
-    return transportImage;
-  }
-}
-
-function getPastWeekDays() {
-  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  const today = new Date();
-  const currentDay = today.getDay(); // Get the current day index (0-6)
-
-  const result = [];
-
-  for (let i = 0; i < 7; i++) {
-    // Calculate the day index for each day in the past week
-    const dayIndex = (currentDay - i + 7) % 7;
-    result.push(daysOfWeek[dayIndex]);
-  }
-
-  result.reverse();
-
-  return result;
-}
-
 function HomePage() {
+
+  const [pastWeekData, setPastWeekData] = useState([0,0,0,0,0,0,0]);
+
   const data = {
     labels: getPastWeekDays(),
     datasets: [
       {
-        label: "Amount($)",
-        data: [10, 2.5, 12, 15, 60, 25, 20],
+        label: "Amount(₹)",
+        data: pastWeekData,
         backgroundColor: "rgba(2, 6, 23, 0.8)",
         borderColor: "rgba(0, 0, 0, 1)",
         borderWidth: 1,
@@ -89,28 +49,39 @@ function HomePage() {
     ],
   };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Amount Spent in last 7 Days",
-      },
-    },
-  };
-
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [isAddExpenseOpen, setisAddExpenseOpen] = useState(false);
+  const [allExpenseData, setAllExpenseData] = useState([]);
+  const [displayData, setDisplayData] = useState([]);
+  const [hardRefresh, setHardRefresh] = useState(false);
 
   const openDialog = () => setisAddExpenseOpen(true);
   const closeDialog = () => setisAddExpenseOpen(false);
 
+  async function fetchData() {
+    await new Expense().getExpense().then((allExpense) => {
+      setAllExpenseData(allExpense.data);
+    });
+  }
+
   useEffect(() => {
-    console.log(expenseData.length);
-  }, []);
+    fetchData();
+  }, [hardRefresh]);
+
+  useEffect(() => {
+    setDisplayData(sortData('Date ( ↓ )', allExpenseData));
+    setPastWeekData(getPast7DaysSpending(allExpenseData));
+  }, [allExpenseData]);
+
+  function handleFilter(category){
+    setDisplayData(filterData(category, allExpenseData));
+  } 
+
+  function handleSort(basedOn){
+    let newData = sortData(basedOn, allExpenseData);
+    console.log(newData);
+    setDisplayData(newData);
+  }
 
   //-------------------------------------------------------------------------------------------------
 
@@ -119,15 +90,24 @@ function HomePage() {
       <div>
         <header className="p-4 text-slate-800 flex items-center justify-between">
           <HamburgerMenu />
-          <h1 className="text-2xl font-bold absolute left-1/2 transform -translate-x-1/2">
-            Expense Tracker
-          </h1>
+          <div className="flex items-center justify-center">
+            <h1 className="text-3xl font-semibold text-slate-700">
+              Expense Tracker
+            </h1>
+            <Lottie
+              play
+              animationData={walletAnimation}
+              loop
+              style={{ width: 100, height: 100 }}
+              speed={2}
+            />
+          </div>
           <div className="w-12 h-12"></div>
         </header>
       </div>
 
       <div className="flex justify-center items-center p-4">
-        <div className="w-full md:w-3/4 lg:w-1/2 lg:h-[50vh] bg-white rounded-lg shadow-lg p-4 ">
+        <div className="w-full md:w-3/4 lg:w-1/2 lg:h-[50vh] bg-white rounded-lg shadow-lg p-4">
           <Bar data={data} options={options} />
         </div>
       </div>
@@ -154,12 +134,13 @@ function HomePage() {
                 "groceries",
                 "bills",
               ]}
-              onChange={() => {}}
+              onChange={handleFilter}
               label={"Filter Category : "}
             />
+
             <DropDownButton
-              options={["Date", "Amount"]}
-              onChange={() => {}}
+              options={["Date ( ↓ )", "Amount ( ↓ )"]}
+              onChange={handleSort}
               label={"Sort By : "}
             />
           </div>
@@ -168,13 +149,14 @@ function HomePage() {
             Current Month Expense
           </span>
 
-          {expenseData.map((expense, idx) => (
+          {displayData.map((expense, idx) => (
             <Tile
-              key={expense.id} // Assuming each expense has a unique `id`
+              key={expense._id} // Assuming each expense has a unique `id`
               index={idx+1}
               imageSrc={getImage(expense.category)} // Replace with a valid image source
               title={expense.title}
               amount={expense.amount}
+              date = {expense.date}
               onEdit={() => {
                 // Implement the edit functionality here
               }}
@@ -184,7 +166,7 @@ function HomePage() {
             />
           ))}
 
-          <div className="flex items-center align-middle justify-center mb-4">
+          {/* <div className="flex items-center align-middle justify-center mb-4">
             <Pagination
               pageSize={5}
               onChange={() => {}}
@@ -192,17 +174,15 @@ function HomePage() {
               total={10}
               prevIcon={<span className="text-gray-700">{"<"}</span>}
               nextIcon={<span className="text-gray-700">{">"}</span>}
-          
             />
-          </div>
-         
+          </div> */}
         </div>
       </div>
 
       <TransactionDialog
         isOpen={isAddExpenseOpen}
         onClose={closeDialog}
-        onAdd={() => {}}
+        setHardRefresh={setHardRefresh}
       />
       <Footer />
     </div>
