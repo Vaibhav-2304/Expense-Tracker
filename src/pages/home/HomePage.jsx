@@ -117,7 +117,7 @@ function HomePage() {
         <header className="p-4 text-slate-800 flex items-center justify-between">
           <HamburgerMenu userName="Dummy" />
           <div className="flex items-center justify-center">
-            <h1 className="text-3xl font-semibold text-slate-700">
+            <h1 className="text-2xl font-semibold text-slate-700">
               Expense Tracker
             </h1>
             <Lottie

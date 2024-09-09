@@ -98,7 +98,7 @@ function PreviousYearDataPage() {
     <>
       <div className="relative min-h-screen bg-gradient-to-r from-green-200 to-blue-300">
         <div>
-          <h1 className="flex items-center align-middle justify-center text-2xl font-semibold text-slate-700 pt-4">
+          <h1 className="flex items-center align-middle justify-center text-2xl font-semibold text-slate-700 pt-4 mx-4">
             Expense Tracker : Previous Years Data
           </h1>
         </div>

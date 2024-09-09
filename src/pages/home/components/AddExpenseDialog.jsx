@@ -36,7 +36,7 @@ const AddExpenseDialog = ({ isOpen, onClose, setHardRefresh}) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-8">
         <h2 className="text-2xl font-bold mb-4">Add Transaction</h2>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="title">

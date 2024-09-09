@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { FaEdit, FaTrash } from "react-icons/fa"; // Import icons from react-icons
 
-
 const Tile = ({ index, imageSrc, title, amount, date, onEdit, onDelete }) => {
   return (
     <div className="flex items-center p-4 m-4 border border-gray-300 rounded-lg shadow-sm bg-white">
@@ -19,11 +18,11 @@ const Tile = ({ index, imageSrc, title, amount, date, onEdit, onDelete }) => {
 
       {/* Content */}
       <div className="ml-4 flex-grow">
-        <div className="flex justify-start">
-          <h3 className="text-xl font-bold">{title} : </h3>
-          <div className="w-4"></div>
-          <p className="text-gray-600 text-lg font-semibold">₹{amount}</p>
-        </div>
+      <div className="flex flex-col sm:flex-row sm:justify-start">
+  <h3 className="text-xl font-bold">{title} :</h3>
+  <div className="h-2 sm:h-0 sm:w-4"></div>
+  <p className="text-gray-600 text-lg font-semibold">₹{amount}</p>
+</div>
         <p className="text-gray-600 text-lg font-semibold mt-2">{date}</p>
       </div>
 
