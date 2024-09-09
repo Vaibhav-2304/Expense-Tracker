@@ -87,8 +87,8 @@ function HomePage() {
   useEffect(() => {
     const currMonthData = getCurrentMonthExpenses(allExpenseData);
     setCurrentMonthData(currMonthData.list);
+    setDisplayData(currMonthData.list);
     setCurrentMonthTotal(currMonthData.total);
-    setDisplayData(sortData('Date ( ↓ )', currMonthData.list));
 
     const lastWeekDetail = getPast7DaysSpending(allExpenseData);
     setPastWeekData(lastWeekDetail.list);
@@ -97,12 +97,12 @@ function HomePage() {
   }, [allExpenseData]);
 
   function handleFilter(category){
-    setDisplayData(filterData(category, currentMonthData));
+    let newData = filterData(category, currentMonthData);
+    setDisplayData(newData);
   } 
 
   function handleSort(basedOn){
     let newData = sortData(basedOn, currentMonthData);
-    console.log(newData);
     setDisplayData(newData);
   }
 

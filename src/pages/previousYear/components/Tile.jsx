@@ -4,10 +4,10 @@ const Tile = ({index, monthName, totalAmount}) => {
   return (
     <div className="flex items-center p-4 m-4 border border-gray-300 rounded-lg shadow-sm bg-white">
       {/* Index */}
-      <p className="text-gray-800 text-xl mr-4">{index + "."}</p>
+      <p className="text-gray-800 text-xl">{index + "."}</p>
 
       {/* Content */}
-      <div className="ml-4 flex-grow">
+      <div className="ml-2 flex-grow">
         <div className="flex justify-start">
           <h3 className="text-xl font-bold">{monthName} : </h3>
           <div className="w-4"></div>

@@ -40,6 +40,15 @@
         return month === currentMonth && year === currentYear;
     });
 
+    currentMonthExpenses.sort((a, b) => {
+      const dateA = a.date.split("-").reverse().join("-"); // Convert DD-MM-YYYY to YYYY-MM-DD
+      const dateB = b.date.split("-").reverse().join("-");
+    
+      return new Date(dateB) - new Date(dateA);
+    });
+
+    console.log(currentMonthExpenses);
+
     const totalAmount = currentMonthExpenses.reduce((sum, expense) => sum + expense.amount, 0);
 
     return {
@@ -91,7 +100,13 @@
       }
     }
 
-    return filteredList;
+    return [...filteredList].sort((a, b) => {
+      const dateA = a.date.split("-").reverse().join("-"); // Convert DD-MM-YYYY to YYYY-MM-DD
+      const dateB = b.date.split("-").reverse().join("-");
+    
+      return new Date(dateB) - new Date(dateA);
+    });
+
   }
 
   export function sortData(basedOn, allExpenseData) {
