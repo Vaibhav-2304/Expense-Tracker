@@ -3,6 +3,8 @@ import { createBrowserRouter, Outlet, Navigate } from 'react-router-dom';
 import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/register/RegisterPage';
 import LoginPage from './pages/login/LoginPage';
+import PreviousMonthDataPage from './pages/previousMonth/PreviousMonthData';
+import PreviousYearDataPage from './pages/previousYear/PreviousYearData';
 
 
 const chekLogin = () => {
@@ -32,7 +34,15 @@ const router = createBrowserRouter([
         {
           path: "register",
           element: <RegisterPage />
-        }
+        },
+        {
+          path: 'previous-months',
+          element: <PreviousMonthDataPage/>
+        },
+        {
+          path: 'previous-years',
+          element: <PreviousYearDataPage/>
+        },
       ]
     }
   ]);

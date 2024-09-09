@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import DropDownButton from "./DropDownButton";
-import Expense from "../../../services/expense_api";
+import DropDownButton from "./DropDownButton.jsx";
+import Expense from "../services/expense_api.js";
 
 var categoryOptions = [
   "food",
@@ -18,26 +18,44 @@ function formatDateToDDMMYYYY(dateString) {
 }
 
 
-const TransactionDialog = ({ isOpen, onClose, setHardRefresh}) => {
+const EditExpenseDialog = ({ expenseToBeEdited, setExpenseToBeEdited, setHardRefresh }) => {
+  // Initialize state with the values from expenseToBeEdited or default values
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("food");
   const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState("");
 
-  const handleAdd = async () => {
-    let newDate = formatDateToDDMMYYYY(date)
-    await new Expense().addExpense(title, newDate, amount, category).then(() => {
+  // Use useEffect to update the state when expenseToBeEdited changes
+  useEffect(() => {
+    if (expenseToBeEdited) {
+      setDate(expenseToBeEdited.date.split("-").reverse().join("-"));
+      setTitle(expenseToBeEdited.title);
+      setAmount(expenseToBeEdited.amount);
+      setCategory(expenseToBeEdited.category);
+    }
+  },[expenseToBeEdited]);
+
+  const handleEdit = async () => {
+    let newDate = formatDateToDDMMYYYY(date);
+
+    await new Expense().updateExpense(expenseToBeEdited._id, title, newDate, amount, category).then(() => {
       setHardRefresh((prev) => !prev); // Refresh the data
-      onClose(); // Close the dialog after adding
+      setExpenseToBeEdited(null); // Close the dialog after adding
     });
   };
 
-  if (!isOpen) return null; // If the dialog is not open, don't render it
+  const handleClose = () => {
+    setExpenseToBeEdited(null);
+  };
+
+  if (expenseToBeEdited == null) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-4">Add Transaction</h2>
+        <h2 className="text-2xl font-bold mb-4">Edit Transaction</h2>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="title">
             Title
@@ -77,31 +95,30 @@ const TransactionDialog = ({ isOpen, onClose, setHardRefresh}) => {
           />
         </div>
         <div className="mb-4">
-          <DropDownButton options={categoryOptions} onChange={setCategory} label={"Select Category : "}/>
+          <DropDownButton initialOption={expenseToBeEdited.category} optionList={categoryOptions} onChange={setCategory} label={"Select Category : "} />
         </div>
         <div className="flex justify-end">
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2"
           >
             Cancel
           </button>
           <button
-            onClick={handleAdd}
+            onClick={handleEdit}
             className="bg-slate-800 hover:bg-slate-950 text-white font-bold py-2 px-4 rounded"
           >
-            Add
+            Save
           </button>
         </div>
       </div>
     </div>
   );
 };
-
-TransactionDialog.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
+EditExpenseDialog.propTypes = {
+    expenseToBeEdited: PropTypes.any,
+    setExpenseToBeEdited: PropTypes.func.isRequired,
   setHardRefresh: PropTypes.func.isRequired,
 };
 
-export default TransactionDialog;
+export default EditExpenseDialog;

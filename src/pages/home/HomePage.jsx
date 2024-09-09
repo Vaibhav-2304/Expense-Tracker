@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import TransactionDialog from "./components/TransactionDialog.jsx";
-import Tile from "./components/ExpenseList.jsx";
+import AddExpenseDialog from "./components/AddExpenseDialog.jsx";
+import EditExpenseDialog from "../../components/EditExpenseDialog.jsx";
+import Tile from "../../components/ExpenseList.jsx";
 import HamburgerMenu from "./components/Hamburger.jsx";
-import DropDownButton from "./components/DropDownButton.jsx";
+import DropDownButton from "../../components/DropDownButton.jsx";
 import Footer from "../Footer/Footer.jsx";
-import Pagination from "rc-pagination";
-import "rc-pagination/assets/index.css";
 import Expense from "../../services/expense_api.js";
-
-import { getImage, getPastWeekDays, options, filterData, sortData, getPast7DaysSpending } from "./components/helper";
+import DeleteDialog from "../../components/DeleteExpenseDialog.jsx";
+import { getImage } from "../../components/category_images";
+import {getPastWeekDays, filterData, sortData, getPast7DaysSpending, getCurrentMonthExpenses } from "./components/helper";
 import Lottie from "react-lottie-player";
 import walletAnimation from "../../assets/wallet.json";
 
@@ -35,6 +35,8 @@ ChartJS.register(
 function HomePage() {
 
   const [pastWeekData, setPastWeekData] = useState([0,0,0,0,0,0,0]);
+  const [pastWeekTotal, setPastWeekTotal] = useState(0);
+  const [currentMonthTotal, setCurrentMonthTotal] = useState(0);
 
   const data = {
     labels: getPastWeekDays(),
@@ -49,9 +51,23 @@ function HomePage() {
     ],
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: true,
+        text: "Amount Spent in last 7 Days (Total : ₹" + pastWeekTotal + ")",
+      },
+    },
+  };
+
   // const [currentPage, setCurrentPage] = useState(1);
   const [isAddExpenseOpen, setisAddExpenseOpen] = useState(false);
   const [allExpenseData, setAllExpenseData] = useState([]);
+  const [currentMonthData , setCurrentMonthData] = useState([]);
   const [displayData, setDisplayData] = useState([]);
   const [hardRefresh, setHardRefresh] = useState(false);
 
@@ -69,19 +85,29 @@ function HomePage() {
   }, [hardRefresh]);
 
   useEffect(() => {
-    setDisplayData(sortData('Date ( ↓ )', allExpenseData));
-    setPastWeekData(getPast7DaysSpending(allExpenseData));
+    const currMonthData = getCurrentMonthExpenses(allExpenseData);
+    setCurrentMonthData(currMonthData.list);
+    setCurrentMonthTotal(currMonthData.total);
+    setDisplayData(sortData('Date ( ↓ )', currMonthData.list));
+
+    const lastWeekDetail = getPast7DaysSpending(allExpenseData);
+    setPastWeekData(lastWeekDetail.list);
+    setPastWeekTotal(lastWeekDetail.total);
+
   }, [allExpenseData]);
 
   function handleFilter(category){
-    setDisplayData(filterData(category, allExpenseData));
+    setDisplayData(filterData(category, currentMonthData));
   } 
 
   function handleSort(basedOn){
-    let newData = sortData(basedOn, allExpenseData);
+    let newData = sortData(basedOn, currentMonthData);
     console.log(newData);
     setDisplayData(newData);
   }
+
+  const [expenseToBeDeleted, setExpenseToBeDeleted] = useState(null);
+  const [expenseToBeEdited, setExpenseToBeEdited] = useState(null);
 
   //-------------------------------------------------------------------------------------------------
 
@@ -89,7 +115,7 @@ function HomePage() {
     <div className="relative min-h-screen bg-gradient-to-r from-green-200 to-blue-300">
       <div>
         <header className="p-4 text-slate-800 flex items-center justify-between">
-          <HamburgerMenu />
+          <HamburgerMenu userName="Dummy" />
           <div className="flex items-center justify-center">
             <h1 className="text-3xl font-semibold text-slate-700">
               Expense Tracker
@@ -125,7 +151,8 @@ function HomePage() {
         <div className="w-full md:w-3/4 lg:w-3/5 bg-white rounded-lg shadow-lg mx-2">
           <div className="flex flex-col sm:flex-row sm:justify-between m-2">
             <DropDownButton
-              options={[
+              initialOption="All"
+              optionList={[
                 "All",
                 "food",
                 "transport",
@@ -139,14 +166,15 @@ function HomePage() {
             />
 
             <DropDownButton
-              options={["Date ( ↓ )", "Amount ( ↓ )"]}
+              initialOption="Date ( ↓ )"
+              optionList={["Date ( ↓ )", "Amount ( ↓ )"]}
               onChange={handleSort}
               label={"Sort By : "}
             />
           </div>
 
           <span className="flex items-center align-middle justify-center mr-2 text-l text-gray-700 font-semibold">
-            Current Month Expense
+            Current Month Expense : ₹{currentMonthTotal}
           </span>
 
           {displayData.map((expense, idx) => (
@@ -158,28 +186,27 @@ function HomePage() {
               amount={expense.amount}
               date = {expense.date}
               onEdit={() => {
-                // Implement the edit functionality here
+                  setExpenseToBeEdited(expense);
               }}
               onDelete={() => {
-                // Implement the delete functionality here
+                setExpenseToBeDeleted(expense);
               }}
             />
           ))}
 
-          {/* <div className="flex items-center align-middle justify-center mb-4">
-            <Pagination
-              pageSize={5}
-              onChange={() => {}}
-              current={currentPage}
-              total={10}
-              prevIcon={<span className="text-gray-700">{"<"}</span>}
-              nextIcon={<span className="text-gray-700">{">"}</span>}
-            />
-          </div> */}
         </div>
       </div>
-
-      <TransactionDialog
+      <EditExpenseDialog
+        expenseToBeEdited = {expenseToBeEdited}
+        setExpenseToBeEdited = {setExpenseToBeEdited}
+        setHardRefresh={setHardRefresh}
+      />
+      <DeleteDialog
+        expenseToBeDeleted={expenseToBeDeleted}
+        setExpenseToBeDeleted={setExpenseToBeDeleted}
+        setHardRefresh={setHardRefresh}
+      />
+      <AddExpenseDialog
         isOpen={isAddExpenseOpen}
         onClose={closeDialog}
         setHardRefresh={setHardRefresh}

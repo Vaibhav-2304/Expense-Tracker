@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import {useNavigate} from 'react-router-dom';
+import PropTypes from "prop-types";
+import Auth from "../../../services/auth_api";
 
-function HamburgerMenu() {
+function HamburgerMenu({userName}) {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const userName = "Vaibhav"; // Replace with dynamic data
-  const monthlyExpenses = "$1500"; // Replace with dynamic data
+  const handleMonthlyClick = () => {
+    navigate("/previous-months");
+  };
+
+  const handleYearlyClick = () => {
+    navigate("/previous-years");
+  };
+
+  const handleLogOut = async () => {
+    await new Auth().logout().then(() => {
+      localStorage.removeItem("token");
+      navigate("/");
+    });
+  };
 
   return (
     <div className="relative">
@@ -23,12 +39,23 @@ function HamburgerMenu() {
       {/* Pop-up Window */}
       {isOpen && (
         <div className="absolute left-0 mt-2 w-64 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
-          <h2 className="text-lg font-semibold mb-2">User Details</h2>
-          <p className="text-gray-700 mb-1"><strong>Name:</strong> {userName}</p>
-          <p className="text-gray-700 mb-4"><strong>Monthly Expenses:</strong> {monthlyExpenses}</p>
+          <p className="text-gray-700 mb-4"><strong>Welcome</strong> {userName}</p>
+          
+          <button className='p-2 w-full border-2 border-slate-700 rounded-lg shadow-lg mb-4 hover:bg-slate-700 hover:text-white transition-all duration-500 ease-in-out'
+          onClick={handleMonthlyClick}
+          >
+            View Monthly Data
+          </button>
+
+          <button className='p-2 w-full border-2 border-slate-700 rounded-lg shadow-lg mb-4 hover:bg-slate-700 hover:text-white transition-all duration-500 ease-in-out'
+          onClick={handleYearlyClick}
+          >
+            View Yearly Data
+          </button>
+          
           <button
             className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600"
-            onClick={() => alert('Logging out...')} // Replace with actual log-out functionality
+            onClick={handleLogOut} 
           >
             Log Out
           </button>
@@ -36,6 +63,10 @@ function HamburgerMenu() {
       )}
     </div>
   );
+}
+
+HamburgerMenu.propTypes = {
+  userName: PropTypes.string.isRequired,
 }
 
 export default HamburgerMenu;

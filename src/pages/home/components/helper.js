@@ -1,33 +1,4 @@
-import billImage from "../../../assets/bill.png";
-import entertainmentImage from "../../../assets/entertainment.png";
-import foodImage from "../../../assets/food.png";
-import grocriesImage from "../../../assets/grocries.png";
-import healthImage from "../../../assets/health.png";
-import transportImage from "../../../assets/transport.png";
-
-export function getImage(category) {
-    if (category == "bills") {
-      return billImage;
-    }
-    if (category == "entertainment") {
-      return entertainmentImage;
-    }
-    if (category == "food") {
-      return foodImage;
-    }
-    if (category == "groceries") {
-      return grocriesImage;
-    }
-    if (category == "health") {
-      return healthImage;
-    }
-    if (category == "transport") {
-      return transportImage;
-    }
-  }
-  
-
- export function getPastWeekDays() {
+  export function getPastWeekDays() {
     const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   
     const today = new Date();
@@ -59,8 +30,27 @@ export function getImage(category) {
     },
   };
 
+  export function getCurrentMonthExpenses(expenses) {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // Months are 0-based, so add 1
+    const currentYear = currentDate.getFullYear();
+
+    const currentMonthExpenses = expenses.filter(expense => {
+        const [, month, year] = expense.date.split('-').map(Number);
+        return month === currentMonth && year === currentYear;
+    });
+
+    const totalAmount = currentMonthExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+    return {
+      "list" : currentMonthExpenses,
+      "total" : totalAmount
+    }
+}
+
   export function getPast7DaysSpending(dataList) {
     const result = [];
+    let total = 0;
     const today = new Date();
   
     // Loop through the past 7 days (including today)
@@ -80,9 +70,13 @@ export function getImage(category) {
         .reduce((sum, item) => sum + item.amount, 0);
   
       result.push(totalAmount);
+      total = total + totalAmount;
     }
   
-    return result;
+    return {
+      "list" : result,
+      "total" : total
+    };
   }
 
   export function filterData(category, allExpensData){

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const DropDownButton = ({ options, onChange, label }) => {
+const DropDownButton = ({initialOption, optionList, onChange, label }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState(options[0]);
+  const [selectedFilter, setSelectedFilter] = useState(initialOption);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -40,7 +40,7 @@ const DropDownButton = ({ options, onChange, label }) => {
         {isOpen && (
           <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
             <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              {options.map((option) => (
+              {optionList.map((option) => (
                 <button
                   key={option}
                   onClick={() => selectOption(option)}
@@ -58,7 +58,8 @@ const DropDownButton = ({ options, onChange, label }) => {
 };
 
 DropDownButton.propTypes = {
-  options: PropTypes.array.isRequired,
+  initialOption: PropTypes.any.isRequired,
+  optionList: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
 };

@@ -37,13 +37,15 @@ class Expense extends Api{
     }
   }
 
-  async updateNote(note) {
+  async updateExpense(id, title, date, amount, category) {
 
     try {
       const response = await this.Api.put("/api/expense", {
-        _id: note._id,
-        title: note.title,
-        content: note.content,
+        _id: id,
+        title: title,
+        date: date,
+        amount : amount,
+        category: category
       });
 
       if (response.status == 200) {
@@ -58,10 +60,10 @@ class Expense extends Api{
     }
   }
 
-  async deleteNote(noteId) {
+  async deleteExpense(expenseId) {
     try {
-      console.log(noteId);
-      const response = await this.Api.delete(`/api/expense?id=${noteId}`);
+      console.log(expenseId);
+      const response = await this.Api.delete(`/api/expense?id=${expenseId}`);
       if (response.status == 200) {
         return true;
       } else {
