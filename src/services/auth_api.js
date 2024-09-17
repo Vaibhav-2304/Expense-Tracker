@@ -41,7 +41,7 @@ class Auth extends Api{
 
     async logout(){
         try {
-            this.Api.post('api/auth/logout'); // this sets the max-age of jwt-key to 0.
+            this.Api.post('api/logout'); // this sets the max-age of jwt-key to 0.
             return true;
         } catch (error) {
             console.error(error.message);
