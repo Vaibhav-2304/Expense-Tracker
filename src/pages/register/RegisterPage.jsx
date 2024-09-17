@@ -99,9 +99,9 @@ const RegisterPage = () => {
         <div className="text-center mt-4">
           <p className="text-gray-600 text-sm font-semibold">
             Already have an account ? {' '}
-            <a href="/login" className="text-black font-semibold hover:font-bold">
-              Login Here
-            </a>
+            <button className="text-black font-semibold hover:font-bold" onClick={()=>(window.location.href = "/login")}>
+            Login Here
+            </button>
           </p>
         </div>
       </div>
