@@ -3,7 +3,7 @@ import { showErrorToast, showToast } from "../components/toast";
 
 class Api {
     Api;
-    baseURL = "http://localhost:3000";
+    baseURL = "https://expense-tracker-backend-yy5n.onrender.com";
 
     constructor() {
         this.Api = axios.create({
