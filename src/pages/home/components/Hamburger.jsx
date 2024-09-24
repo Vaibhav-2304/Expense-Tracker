@@ -18,7 +18,7 @@ function HamburgerMenu({userName}) {
   const handleLogOut = async () => {
     await new Auth().logout().then(() => {
       localStorage.removeItem("token");
-      navigate("/");
+      navigate("/login");
     });
   };
 
